@@ -1,0 +1,30 @@
+import sys
+
+# Check the number of command line arguments
+if len(sys.argv) != 2:
+    print("Usage: factors <file>")
+    sys.exit(1)
+
+# Read the numbers from the file
+with open(sys.argv[1], "r") as f:
+    numbers = [int(line) for line in f]
+
+# Factorize each number
+for n in numbers:
+    # Check if n is even
+    if n % 2 == 0:
+        print(f"{n}={n//2}*2")
+    else:
+        # Check if n is a multiple of 3
+        if n % 3 == 0:
+            print(f"{n}={n//3}*3")
+        else:
+            # Check if n is a perfect square
+            i = 1
+            while i * i <= n:
+                if i * i == n:
+                    print(f"{n}={i}*{i}")
+                    break
+                i += 1
+            else:
+                print(f"{n}=No factorization found")
