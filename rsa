@@ -1,0 +1,67 @@
+import sys
+
+def pollard_rho(n):
+    # Check if n is even
+    if n % 2 == 0:
+        return 2
+    # Choose a random number in the range [2, n-2]
+    x = 2
+    y = 2
+    c = 1
+    # Iterate until a factor is found or the maximum number of iterations is reached
+    for i in range(1, n):
+        x = (x * x + c) % n
+        d = gcd(abs(x - y), n)
+        if d != 1:
+            return d
+        if i % 127 == 0:
+            y = x
+    # Return 1 if no factor was found
+    return 1
+
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+def factorize(n):
+    # Check if n is prime
+    if is_prime(n):
+        return [n]
+    # Use Pollard-Rho to find a factor of n
+    factor = pollard_rho(n)
+    # Check if the factor is prime
+    if is_prime(factor):
+        return [factor]
+    # Recursively factorize the remaining part of n
+    return factorize(factor) + factorize(n // factor)
+
+def is_prime(n):
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+    return True
+
+# Check the number of command line arguments
+if len(sys.argv) != 2:
+    print("Usage: rsa <file>")
+    sys.exit(1)
+
+# Read the number from the file
+with open(sys.argv[1], "r") as f:
+    n = int(f.read())
+
+# Factorize the number
+factors = factorize(n)
+
+# Print the result
+print(f"{n}=", end="")
+print("*".join(str(f) for f in factors))
